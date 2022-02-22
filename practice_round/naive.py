@@ -57,7 +57,6 @@ def test_ingredients():
       winner = max(ingredient_score, key=ingredient_score.get)
       print(f'{ingredient_score=}')
       print(f'{winner= }')
-      #print(f"{winner} seems nice, it gave {ingredient_score[winner]} new customers")
       result.add(winner)
       for key in customer_dislike:
           if winner in customer_dislike[key]:
@@ -65,13 +64,6 @@ def test_ingredients():
               print(f'{key} disliked {winner} with a score of {ingredient_score[winner]=}')
     
     ingredients.difference_update(result)
-
-
-'''
-a [1], [2]
-b [2, 3], [1]
-c [2, 3], [1]
-'''
 
 
 def satisfied(customer_like,customer_dislike,result):
@@ -122,6 +114,6 @@ for file_name in files:
   #print(result,ingredients,f"improvement = {less_naive_satisfied-naive_satisfied}")
 
   with  open(f'output_{file_name[:-7]}.txt', 'w') as f:
-    f.write(str(len(ingredients)))
-    for i in ingredients:
+    f.write(str(len(result)))
+    for i in result:
       f.write(f' {i}')
