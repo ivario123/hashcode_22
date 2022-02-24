@@ -1,3 +1,5 @@
+import sys
+
 class Skill:
     def __repr__(self):
         return str(self)
@@ -123,6 +125,7 @@ if __name__ == "__main__":
     
     day = 0
     assignments = []
+    projects.sort(key=lambda proj: proj.score)
     for project in projects:
         devs = project.can_take_basic(contributors)
         if not len(devs) == 0 and (day + project.duration_days) <= project.best_before_day:
