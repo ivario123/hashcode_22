@@ -30,6 +30,8 @@ class Contributor:
         self.name = name
         self.skills = skills
         self.projects = []
+        self.busy = False
+        self.finish_day = 0
 
 class Role:
     def __repr__(self):
@@ -55,20 +57,22 @@ class Project:
         self.score = score
         self.best_before_day = best_before_day
         self.roles = roles
+        self.finished = False
 
-    def can_take_basic(self, devs):
+    def can_take_basic(self, devs, day):
         out_devs = []
         role_len = len(self.roles)
-        dev_assigned = [{"assigned": False, "dev": dev} for dev in devs]
         for p_skill in self.roles:
             role_assigned = False
-            for dev in dev_assigned:
-                if dev["assigned"]:
-                    break
-                for d_skill in dev["dev"].skills:
+            for dev in devs:
+                if dev.busy:
+                    print("{} is busy!".format(dev.name))
+                    continue
+                for d_skill in dev.skills:
                     if d_skill.fullfills(p_skill):
-                        out_devs.append(dev["dev"])
-                        dev["assigned"] = True
+                        out_devs.append(dev)
+                        dev.busy = True
+                        dev.finish_day = day + self.duration_days
                         role_assigned = True
                         break
                 if role_assigned:
@@ -125,12 +129,31 @@ if __name__ == "__main__":
     
     day = 0
     assignments = []
+    free = contributors
     projects.sort(key=lambda proj: proj.score)
-    for project in projects:
-        devs = project.can_take_basic(contributors)
-        if not len(devs) == 0 and (day + project.duration_days) <= project.best_before_day:
-            assignments.append(ProjectAssignment(project.name, devs))
-            day += project.duration_days
+
+    def projects_available(projects, day):
+        for project in projects:
+            if (day + project.duration_days) <= project.best_before_day + 100:
+                return True
+        return False
+
+    while projects_available(projects, day):
+        taken = set()
+
+        for project in projects:
+            if project.finished == True:
+                continue
+
+            devs = project.can_take_basic(contributors, day)
+            if not len(devs) == 0 and (day + project.duration_days) <= project.best_before_day:
+                assignments.append(ProjectAssignment(project.name, devs))
+                project.finished = True
+            
+        for contributor in contributors:
+            if day >= contributor.finish_day:
+                contributor.busy = False
+        day += 1
 
     print(len(assignments))
     for assignment in assignments:
