@@ -1,0 +1,12 @@
+   Compiling hashcode v0.1.0 (/home/jona/projects/hashcode/hashcode)
+warning: field is never read: `score`
+  --> src/main.rs:36:5
+   |
+36 |     score: usize,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `hashcode` (bin "hashcode") generated 1 warning
+    Finished release [optimized] target(s) in 0.54s
+     Running `target/release/hashcode`
