@@ -198,6 +198,9 @@ fn main() {
     projects.sort_by(|a, b| a.score.cmp(&b.score));
 
     fn projects_available(projects: &Vec<Project>, current_day: usize) -> bool {
+        if current_day > 200 {
+            return false;
+        }
         for project in projects {
             if (current_day + project.duration_days) <= project.best_before_day {
                 eprintln!(
